@@ -102,6 +102,10 @@ values = [
         *(
           empire_species
             .map { |species| planet_species.count(species) }
+            .map { |count|
+              next '' if count == 0
+              count
+            }
         )
       ]
     end
