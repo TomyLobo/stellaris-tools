@@ -4,6 +4,11 @@ require 'zip'
 require 'strscan'
 
 class Stellaris
+  @@functions = [
+    :rgb,
+    :hsv,
+  ]
+
   def parser_error
     File.write('parser-error-gamestate', @scanner.string)
     raise "Parser error at character #{@scanner.pos} with #{@scanner.rest_size} characters remaining:\n#{@scanner.rest[0, 100]}"
@@ -103,6 +108,7 @@ class Stellaris
     value ||= parse_float?
     value ||= parse_integer?
     value ||= parse_identifier?
+    return [ value, parse_value? ] if @@functions.include?(value)
     value ||= parse_dictionary_array?
 
     return value
