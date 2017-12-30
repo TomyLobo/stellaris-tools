@@ -95,6 +95,8 @@ class Stellaris
 
   #rule(:value)      { (string | float | dictionary | array | identifier) >> space? }
   def parse_value?
+    parse_space?
+
     value = nil
 
     value ||= parse_string?
@@ -117,12 +119,15 @@ class Stellaris
 
   #rule(:equals)     { match('=') }
   def parse_equals?
+    parse_space?
     return nil unless @scanner.scan(/\s*=\s*/m)
     return :'='
   end
 
   #rule(:key)        { identifier | float | equals }
   def parse_key?
+    parse_space?
+
     key = nil
     key ||= parse_identifier?
     key ||= parse_float?
@@ -146,8 +151,6 @@ class Stellaris
   end
 
   def parse_keyvalues
-    parse_space?
-
     ret = Hash.new { |h,k| h[k] = [] }
 
     while @scanner.rest?
